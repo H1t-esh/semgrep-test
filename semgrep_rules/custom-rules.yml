@@ -9,7 +9,12 @@ rules:
       - pattern-not: |
           $VAR = request.args.get($PARAM)
           if not is_valid_*($VAR):
-              return "Invalid input", 400
+              return ..., 400
+      - pattern-not: |
+          $VAR = request.args.get($PARAM)
+          if not re.match(r"^[a-zA-Z0-9]{1,20}$", $VAR):
+              return ..., 400
+
 
   - id: missing-output-encoding
     languages: [javascript]
@@ -19,3 +24,5 @@ rules:
     patterns:
       - pattern: res.send("<h1>Welcome, " + $USER_INPUT + "</h1>")
       - pattern-not: res.send("<h1>Welcome, " + escapeHtml($USER_INPUT) + "</h1>")
+      - pattern-not: res.send("<h1>Welcome, " + escapeHtml($USER_INPUT.trim()) + "</h1>")
+
