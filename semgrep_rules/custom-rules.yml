@@ -1,0 +1,21 @@
+rules:
+  - id: missing-input-validation
+    languages: [python]
+    severity: ERROR
+    message: |
+      🚨 User input is used without validation! Validate input before processing.
+    patterns:
+      - pattern: $VAR = request.args.get($PARAM)
+      - pattern-not: |
+          $VAR = request.args.get($PARAM)
+          if not is_valid_*($VAR):
+              return "Invalid input", 400
+
+  - id: missing-output-encoding
+    languages: [javascript]
+    severity: ERROR
+    message: |
+      🚨 Possible XSS vulnerability! Encode output before rendering user input.
+    patterns:
+      - pattern: res.send("<h1>Welcome, " + $USER_INPUT + "</h1>")
+      - pattern-not: res.send("<h1>Welcome, " + escapeHtml($USER_INPUT) + "</h1>")
